@@ -1,0 +1,48 @@
+networks:
+    backend:
+        driver: bridge
+volumes:
+    mysql:
+        driver: local
+
+services:
+    postgres:
+        image: postgres
+        restart: always
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: 1234
+            PGDATA: /data/postgres
+        volumes:
+            - ./data/postgres:/data/postgres
+        networks:
+            - backend
+    mysql:
+        image: mysql
+        restart: always
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: 1234
+            MYSQL_DATABASE: default
+            MYSQL_USER: user
+            MYSQL_PASSWORD: 1234
+        volumes:
+            - ./data/mysql:/var/lib/mysql/
+        networks:
+            - backend
+    main:
+        restart: always
+        build:
+            context: ./main
+        volumes:
+            - ./mysql:/var/lib/mysql
+            - ./apps:/var/www
+        ports:
+            - 22
+            - 8000
+        tty: true
+        networks:
+            - backend

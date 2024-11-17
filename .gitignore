@@ -1,0 +1,5 @@
+/apps
+/data
+.DS_Store
+main/id_rsa
+main/id_rsa.pub
