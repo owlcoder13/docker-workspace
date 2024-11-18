@@ -33,6 +33,13 @@ services:
             - ./data/mysql:/var/lib/mysql/
         networks:
             - backend
+    redis:
+        image: redis
+        restart: always
+        ports:
+            - "6379:6379"
+        networks:
+            - backend
     main:
         restart: always
         build:
@@ -42,7 +49,9 @@ services:
             - ./apps:/var/www
         ports:
             - 22
-            - 8000
+            - "8000:8000"
+            - "8080:8080"
+            - "5173:5173"
         tty: true
         networks:
             - backend

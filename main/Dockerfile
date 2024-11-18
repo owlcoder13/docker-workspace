@@ -34,4 +34,4 @@ CMD ["/bin/bash"]
 
 WORKDIR /var/www
 
-EXPOSE 8000 8080
+# EXPOSE 8000 8080
