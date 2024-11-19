@@ -55,3 +55,35 @@ services:
         tty: true
         networks:
             - backend
+    elastic:
+        image: elasticsearch:8.16.0
+        restart: always
+        volumes:
+            - ./data/elastic:/usr/share/elasticsearch/data
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        networks:
+            - backend
+        environment:
+            - cluster.name=docker-cluster
+            - discovery.type=single-node
+            - bootstrap.memory_lock=true
+            - xpack.security.enabled=false
+            # - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    mongo:
+        image: mongo
+        restart: always
+        volumes:
+            - ./data/mongo:/data/db
+        ports:
+            - "27017:27017"
+        networks:
+            - backend
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: 1234
+    
+
+    
