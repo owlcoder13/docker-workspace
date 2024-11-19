@@ -30,6 +30,9 @@ ENV NODE_PATH /usr/bin/versions/node/v20.18.0/lib/node_modules
 ENV PATH /usr/bin/versions/node/v20.18.0/bin:$PATH
 RUN npm -g install yarn 
 
+# Забыл гит поставить
+RUN apt install git -y
+
 CMD ["/bin/bash"]
 
 WORKDIR /var/www
