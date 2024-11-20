@@ -40,21 +40,6 @@ services:
             - "6379:6379"
         networks:
             - backend
-    main:
-        restart: always
-        build:
-            context: ./main
-        volumes:
-            - ./mysql:/var/lib/mysql
-            - ./apps:/var/www
-        ports:
-            - 22
-            - "8000:8000"
-            - "8080:8080"
-            - "5173:5173"
-        tty: true
-        networks:
-            - backend
     elastic:
         image: elasticsearch:8.16.0
         restart: always
@@ -84,6 +69,23 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: 1234
+    main:
+        restart: always
+        build:
+            context: ./main
+        volumes:
+            - ./mysql:/var/lib/mysql
+            - ./apps:/var/www
+        ports:
+            - 22
+            - "8000:8000"
+            - "8080:8080"
+            - "5173:5173"
+        tty: true
+        networks:
+            - backend
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
     
 
     
