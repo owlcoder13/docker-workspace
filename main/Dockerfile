@@ -5,7 +5,7 @@ RUN apt update
 RUN apt install php php-gd php-mbstring php-intl php-zip php-mbstring php-pgsql php-mysql php-dom php-xml php-curl php-pdo php-dev -y
 
 # Прочие библиотеки
-RUN apt install vim ssh curl -y
+RUN apt install vim ssh curl git -y
 
 # добавление ключей, чтобы зайти на удалённый сервер
 COPY ./id_rsa /root/.ssh/id_rsa
@@ -24,14 +24,19 @@ RUN mv composer.phar /usr/local/bin/composer
 USER root
 
 # INSTALL NODE + YARN
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-RUN . ~/.nvm/nvm.sh && nvm install 20 && nvm use 20
-ENV NODE_PATH /usr/bin/versions/node/v20.18.0/lib/node_modules
-ENV PATH /usr/bin/versions/node/v20.18.0/bin:$PATH
-RUN npm -g install yarn 
 
-# Забыл гит поставить
-RUN apt install git -y
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+RUN . ~/.nvm/nvm.sh && nvm install 20.18.1 && nvm use 20.18.1
+ENV NODE_PATH /usr/bin/versions/node/v20.18.1/lib/node_modules
+ENV PATH=/usr/bin/versions/node/v20.18.1/bin:$PATH
+RUN . ~/.nvm/nvm.sh && npm -g install yarn 
+
+RUN apt install software-properties-common -y
+RUN add-apt-repository ppa:deadsnakes/ppa -y
+RUN apt install python3.13-full -y
+
+RUN pecl install mongodb
+RUN echo "extension=mongodb.so" > /etc/php/8.3/cli/conf.d/30-mongodb.ini
 
 CMD ["/bin/bash"]
 

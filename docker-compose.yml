@@ -28,6 +28,7 @@ services:
             MYSQL_PASSWORD: 1234
         volumes:
             - ./data/mysql:/var/lib/mysql/
+            - ./apps:/root
         networks:
             - backend
     redis:
