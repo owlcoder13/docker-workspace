@@ -24,19 +24,44 @@ RUN mv composer.phar /usr/local/bin/composer
 USER root
 
 # INSTALL NODE + YARN
-
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 RUN . ~/.nvm/nvm.sh && nvm install 20.18.1 && nvm use 20.18.1
 ENV NODE_PATH /usr/bin/versions/node/v20.18.1/lib/node_modules
 ENV PATH=/usr/bin/versions/node/v20.18.1/bin:$PATH
 RUN . ~/.nvm/nvm.sh && npm -g install yarn 
 
+# install python
 RUN apt install software-properties-common -y
 RUN add-apt-repository ppa:deadsnakes/ppa -y
 RUN apt install python3.13-full -y
 
+# install mongodb
 RUN pecl install mongodb
 RUN echo "extension=mongodb.so" > /etc/php/8.3/cli/conf.d/30-mongodb.ini
+
+# install phantomjs for arm64
+RUN apt update
+RUN wget https://launchpad.net/ubuntu/+source/phantomjs/2.1.1+dfsg-2ubuntu1/+build/19118060/+files/phantomjs_2.1.1+dfsg-2ubuntu1_arm64.deb
+RUN apt install ./phantomjs_2.1.1+dfsg-2ubuntu1_arm64.deb -y
+RUN apt install -f
+RUN export DISPLAY=:0    
+RUN export QT_QPA_PLATFORM='offscreen'
+
+RUN apt install -y wget gnupg 
+# RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+# RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+# RUN apt update
+
+# install dependencies for chromium
+# RUN apt install -y libgtk2.0-0t64 libgtk-3-0t64 libgbm-dev libnotify-dev libnss3 libxss1 libasound2t64 libxtst6 xauth xvfb
+# RUN apt install -y fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 --no-install-recommends
+# RUN apt install -y chromium-browser
+# RUN rm -rf /var/lib/apt/lists/*
+RUN add-apt-repository ppa:xtradeb/apps -y
+RUN apt update
+RUN apt install -y chromium
+
+RUN apt-get install -y iputils-ping
 
 CMD ["/bin/bash"]
 
